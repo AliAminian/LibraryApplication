@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookService {
             BeanUtils.copyProperties(updatedBookEntity, existingBookEntity);
             return Optional.of(bookRepository.save(existingBookEntity));
         }
-        return null; // Handle the case when the book with the given id is not found
+        return Optional.empty(); // Handle the case when the book with the given id is not found
     }
 
     @Override

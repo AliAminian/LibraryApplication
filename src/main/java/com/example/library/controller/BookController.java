@@ -1,7 +1,6 @@
 package com.example.library.controller;
 
 import com.example.library.controller.aop.RateLimited;
-import com.example.library.dto.AuthResponseDTO;
 import com.example.library.dto.BookDTO;
 import com.example.library.model.BookEntity;
 import com.example.library.service.BookService;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Book;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
