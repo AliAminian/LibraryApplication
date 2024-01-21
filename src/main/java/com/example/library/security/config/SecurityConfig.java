@@ -1,5 +1,8 @@
-package com.example.library.security;
+package com.example.library.security.config;
 
+import com.example.library.security.CustomeUserDetailsService;
+import com.example.library.security.jwt.JwtAuthEntryPoint;
+import com.example.library.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +43,14 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/auth/**", "/h2-console/**")
+                    .antMatchers(
+                            "/api/auth/**",
+                            "/h2-console/**",
+                            "/swagger-ui/**",
+                            "/v2/**",
+                            "/swagger/**",
+                            "/swagger-resources/**",
+                            "/swagger-ui.html")
                     .permitAll()
                     .anyRequest()
                     .authenticated()

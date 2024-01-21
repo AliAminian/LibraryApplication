@@ -1,7 +1,8 @@
-package com.example.library.security;
+package com.example.library.security.jwt;
 
 import java.util.Date;
 
+import com.example.library.security.config.SecurityConstants;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;

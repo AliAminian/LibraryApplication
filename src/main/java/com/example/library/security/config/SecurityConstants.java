@@ -1,4 +1,4 @@
-package com.example.library.security;
+package com.example.library.security.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

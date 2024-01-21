@@ -3,80 +3,57 @@ package com.example.library.controller;
 import com.example.library.dto.AuthResponseDTO;
 import com.example.library.dto.LoginDTO;
 import com.example.library.dto.RegisterDTO;
-import com.example.library.model.RolesEntity;
-import com.example.library.model.UserEntity;
-import com.example.library.repository.RoleRepository;
-import com.example.library.repository.UserRepository;
-import com.example.library.security.JwtTokenGenerator;
+import com.example.library.service.AuthService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private JwtTokenGenerator jwtGenerator;
+    private final AuthService userRoleService;
 
-
-    public AuthController(
-            AuthenticationManager authenticationManager,
-            @Autowired UserRepository userRepository,
-            @Autowired RoleRepository roleRepository,
-            @Autowired PasswordEncoder passwordEncoder,
-            @Autowired JwtTokenGenerator jwtGenerator
-    ) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtGenerator = jwtGenerator;
+    @Autowired
+    public AuthController(AuthService userRoleService) {
+        this.userRoleService = userRoleService;
     }
-
 
     @PostMapping("/login")
+    @ApiOperation(value = "login with username and password", produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "new login with newly generated token", response = AuthResponseDTO.class),
+            @ApiResponse(code = 400, message = "An error occurred")
+    })
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDto){
-        Authentication authentication = authenticationManager.authenticate(
-                                                                        new UsernamePasswordAuthenticationToken(
-                                                                                loginDto.getUsername(),
-                                                                                loginDto.getPassword())
-                                                                );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
-        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+        AuthResponseDTO token = userRoleService.getAuthToken(loginDto);
+        if (token.getAccessToken().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-
     @PostMapping("/register")
+    @ApiOperation(value = "register new user", produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "new login with newly generated token", response = String.class),
+            @ApiResponse(code = 400, message = "username is already taken"),
+            @ApiResponse(code = 401, message = "unauthorized user")
+    })
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
-        if (userRepository.existsByUsername(registerDto.getUsername())) {
+        if (userRoleService.isAuthorized(registerDto.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
-
-        UserEntity user = new UserEntity();
-        user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-
-        RolesEntity roles = roleRepository.findByName("USER").get();
-        user.setRoles(Collections.singletonList(roles));
-
-        userRepository.save(user);
-
+        if (userRoleService.registerUser(registerDto) == null) {
+            return new ResponseEntity<>("Try again", HttpStatus.UNAUTHORIZED);
+        }
         return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.example.library.service;
 
 import com.example.library.model.BookEntity;
 import com.example.library.repository.BookRepository;
+import com.example.library.service.Impl.BookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -47,7 +48,7 @@ class BookEntityServiceTest {
 
         Optional<BookEntity> result = bookService.getBookById(bookId);
 
-        assertEquals(book, result);
+        assertEquals(book, result.get());
     }
 
     @Test
@@ -71,7 +72,7 @@ class BookEntityServiceTest {
 
         Optional<BookEntity> result = bookService.updateBook(bookId, updatedBook);
 
-        assertEquals(updatedBook, result);
+        assertEquals(updatedBook, result.get());
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.example.library.security;
 
-import com.example.library.model.RolesEntity;
+import com.example.library.model.RoleEntity;
 import com.example.library.model.UserEntity;
 import com.example.library.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CustomeUserDetailsService implements UserDetailsService {
         return new User(user.getUsername(), user.getPassword(), mapRoleToAuthority(user.getRoles()));
     }
 
-    private Collection<GrantedAuthority> mapRoleToAuthority (List<RolesEntity> roles) {
+    private Collection<GrantedAuthority> mapRoleToAuthority (List<RoleEntity> roles) {
         return roles.stream().map((role)-> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 }
