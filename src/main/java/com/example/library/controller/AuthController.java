@@ -4,6 +4,7 @@ import com.example.library.dto.AuthResponseDTO;
 import com.example.library.dto.LoginDTO;
 import com.example.library.dto.RegisterDTO;
 import com.example.library.service.AuthService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
+@Api(tags = "Authentication and Authorization Management")
 public class AuthController {
 
     private final AuthService userRoleService;

@@ -27,7 +27,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Library Management API")
+                .title("Library API")
                 .description("APIs for managing books in a library")
                 .version("1.0")
                 .build();
