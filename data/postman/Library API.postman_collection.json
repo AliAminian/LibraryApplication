@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "6eb97bdd-5c14-4768-bb5d-5bc0db0919ce",
+		"name": "Library API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31688451"
+	},
+	"item": [
+		{
+			"name": "UserManagement",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"user_2\",\n    \"password\" : \"pass_3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}api/auth/register",
+							"host": [
+								"{{local}}api"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"user_1\",\n    \"password\" : \"pass_1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}api/auth/login",
+							"host": [
+								"{{local}}api"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BookManagement",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"Royaye Ali\",\n    \"author\": \"roya\",\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}api/books/",
+							"host": [
+								"{{local}}api"
+							],
+							"path": [
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Bearer",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyXzEiLCJpYXQiOjE3MDU3Njg1NjgsImV4cCI6MTcwNTc2ODYzOH0.r3fjVMfHP_fNGqO2E1r2_pF8YZPdVH93zaCvp0y1QQlj6kKgJdyC4t-rZiDDmYPUVTC9nuNAWgvLdRE_qhHgBA",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}api/books/",
+							"host": [
+								"{{local}}api"
+							],
+							"path": [
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
